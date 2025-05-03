@@ -21,7 +21,22 @@ int main()
 
         if (login_signup == 1)
         {
-            login();
+            int option;
+            printf("ARE YOU A PATIENT OR DOCTOR? ENTER 1 FOR PATIENT AND 2 FOR DOCTOR: ");
+            scanf("%d" , &option);
+
+            if (option == 1)
+            {
+                patient_login();
+            }
+            else if (option == 2)
+            {
+                doctor_login();
+            }
+            else
+            {
+                printf("INVALID ENTRY\n");
+            }
             screwed_up = 0;
         }
         else if (login_signup == 2)
