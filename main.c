@@ -15,7 +15,7 @@ int main()
 
     while (screwed_up == 1)
     {
-        printf("LOGIN(1)                           SIGNUP(2)\n");
+        printf("LOGIN(1)                              SIGNUP(2)\n");
         printf("ENTER YOUR CHOICE: ");
         scanf("%d" , &login_signup);
 
