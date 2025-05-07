@@ -25,16 +25,6 @@ int is_equal2(char *str1 , char *str2)
 
 int id_gen()
 {
-    /*using the srand() function to generate a random number
-        everytime the program runs. The time function from the time
-        header file is used to give a unique "seed" each time the program is run.
-        The argument NULL is to ensure the time checked by the time() function
-        isnt stored.
-        
-        CHECK ONLINE SOURCES FOR MORE INFO...*/
-
-    srand(time(NULL));
-
     int id = 0;
     for (int i = 0; i < 3; i++)
     {
@@ -55,8 +45,38 @@ void file_write(FILE *fptr , char *u , char *pass)
     fputs(entry , fptr);
 }
 
+char * check_id(char *id_str , char check_list[MAX_USERS][100] , int l)
+{
+    int sign = 0;
+    int id;
+    for (int i = 0; i < l; i++)
+    {
+        if (is_equal2(check_list[i] , id_str) == 1)
+        {
+            id = id_gen();
+            //coverting the id to string using snprintf()
+            snprintf(id_str , sizeof(id_str) , "%d" , id);
+            sign = 1;
+            break;
+        }
+        else
+        {
+            continue;
+        }
+    }
+    if (sign == 1)
+    {
+        return check_id(id_str , check_list , l);
+    }
+    else
+    {
+        return id_str;
+    }
+}
+
 void doctor_signup()
 {
+    char userid_check_list[MAX_USERS][100];
     printf("%s" , divider2);
     printf("HOSPITAL MANAGEMEMNT SYSTEM\n");
     printf("WELCOME TO THE SIGNUP PAGE!\n");
@@ -64,8 +84,40 @@ void doctor_signup()
 
     printf("GENERATING AN ID FOR YOU...\n");
     doctor_id = id_gen();
-    printf("YOUR ID IS: %d\n" , doctor_id);
+    //coverting the id to string using snprintf()
+    char doctor_id_str[10];
+    snprintf(doctor_id_str , sizeof(doctor_id_str) , "%d" , doctor_id);
 
+    //checking for duplicates in file
+    FILE *file1 = fopen("doctor_data.txt" , "r");
+    if (file1 == NULL) {printf("ERROR. FILE DOES NOT EXIST");}
+    else
+    {
+        char entry[100];
+        char userid[100];
+        int j = 0;
+        while (fgets(entry , sizeof(entry) , file1) != NULL && j < MAX_USERS)
+        {
+            char *comma = strchr(entry , ',');
+
+            // Get the index of the comma
+            int index = comma - entry;
+
+            // Copy part before comma
+            strncpy(userid, entry, index);
+            userid[index] = '\0';  // Null-terminate the string
+
+            strcpy(userid_check_list[j] , userid);
+            j++;
+        }
+    }
+    fclose(file1);
+
+    //cross verifying input for duplicates and getting valid id
+    int length = sizeof(userid_check_list)/sizeof(userid_check_list[0]);
+    strcpy(doctor_id_str , check_id(doctor_id_str , userid_check_list , length));
+
+    printf("YOUR ID IS: %d\n" , doctor_id);
     printf("ENTER YOUR PASSWORD OF CHOICE\n");
     printf("PASSWORD: ");
     scanf("%s" , password_choice);
@@ -75,21 +127,18 @@ void doctor_signup()
     if (file == NULL){printf("ERROR. FILE NOT OPENED");}
     else
     {
-        //coverting the id to string using snprintf()
-        char doctor_id_str[10];
-        snprintf(doctor_id_str , sizeof(doctor_id_str) , "%d" , doctor_id);
-
         file_write(file , doctor_id_str , password_choice);
         fclose(file);
         
     }
 
     printf("SIGNED UP SUCCESSFULLY!\n");
+    printf("%s" , divider2);
 }
 
 void patient_signup()
 {
-    char user_check_list[MAX_USERS][100] = {"ADMIN"};
+    char user_check_list[MAX_USERS][100];
     printf("%s" , divider2);
     printf("HOSPITAL MANAGEMEMNT SYSTEM\n");
 
@@ -102,7 +151,7 @@ void patient_signup()
     {
         char entry[100];
         char username[100];
-        int j = 1;
+        int j = 0;
         while (fgets(entry , sizeof(entry) , file1) != NULL && j < MAX_USERS)
         {
             char *comma = strchr(entry , ',');
@@ -156,9 +205,8 @@ void patient_signup()
                 fclose(file);
             }
 
-            printf("%s" , divider2);
-
             printf("SIGNED UP SUCCESSFULLY!\n");
+            printf("%s" , divider2);
             quit_check = 1;
             break;
         }

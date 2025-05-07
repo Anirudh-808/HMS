@@ -6,6 +6,16 @@ char divider[] = "====================================\n";
 
 int main() 
 {
+    /*using the srand() function to generate a random number
+        everytime the program runs. The time function from the time
+        header file is used to give a unique "seed" each time the program is run.
+        The argument NULL is to ensure the time checked by the time() function
+        isnt stored.
+        
+        CHECK ONLINE SOURCES FOR MORE INFO...*/
+
+    srand(time(NULL));
+
     int login_signup;
     int screwed_up = 1;
 

@@ -1,10 +1,13 @@
 #include <stdio.h>
 #include <string.h>
 
+//using a preprocessor directive to define a constant number of users
+#define MAX_USERS 1000
+
 char divider1[] = "====================================\n";
-char users_list[][100] = {"ADMIN"};
-char users_id_list[][100] = {"000"};
-char passwords_list[][100] = {"admin123"};
+char users_list[MAX_USERS][100];
+char users_id_list[MAX_USERS][100];
+char passwords_list[MAX_USERS][100];
 
 //function to check if 2 strings are equal
 int is_equal(char *str1 , char *str2)
@@ -24,7 +27,7 @@ void file_read_patient(FILE *fptr)
     char entry[100];
     char username[100];
     char password[100];
-    int j = 1;
+    int j = 0;
     while (fgets(entry , sizeof(entry) , fptr) != NULL)
     {
         char *comma = strchr(entry , ',');
@@ -52,7 +55,7 @@ void file_read_doctor(FILE *fptr)
     char entry[100];
     char userid[100];
     char password[100];
-    int j = 1;
+    int j = 0;
     while (fgets(entry , sizeof(entry) , fptr) != NULL)
     {
         char *comma = strchr(entry , ',');
