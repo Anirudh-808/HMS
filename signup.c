@@ -3,10 +3,25 @@
 #include <time.h>
 #include <string.h>
 
+//using a preprocessor directive to define a constant number of users
+#define MAX_USERS 1000
+
 char divider2[] = "====================================\n";
 char username_choice[50];
 char password_choice[50];
 int doctor_id;
+
+int is_equal2(char *str1 , char *str2)
+{
+    if (strcmp(str1, str2) == 0)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
 
 int id_gen()
 {
@@ -74,17 +89,11 @@ void doctor_signup()
 
 void patient_signup()
 {
-    char user_check_list[][100] = {"ADMIN"};
+    char user_check_list[MAX_USERS][100] = {"ADMIN"};
     printf("%s" , divider2);
     printf("HOSPITAL MANAGEMEMNT SYSTEM\n");
 
     printf("WELCOME TO THE SIGNUP PAGE!\n");
-    /*printf("PLEASE ENTER YOUR USERNAME AND PASSWORD OF CHOICE\n");
-    printf("%s" , divider2);
-    printf("USERNAME: ");
-    scanf("%s" , username_choice);
-    printf("PASSWORD: ");
-    scanf("%s" , password_choice);*/
 
     //checking for duplicates in file
     FILE *file1 = fopen("patient_data.txt" , "r");
@@ -94,7 +103,7 @@ void patient_signup()
         char entry[100];
         char username[100];
         int j = 1;
-        while (fgets(entry , sizeof(entry) , file1) != NULL)
+        while (fgets(entry , sizeof(entry) , file1) != NULL && j < MAX_USERS)
         {
             char *comma = strchr(entry , ',');
 
@@ -121,32 +130,41 @@ void patient_signup()
         scanf("%s" , username_choice);
         printf("PASSWORD: ");
         scanf("%s" , password_choice);
-        for (int i = 0; i < sizeof(user_check_list)/sizeof(user_check_list[0][0]); i++)
+        int flag = 0;
+        for (int i = 0; i < sizeof(user_check_list)/sizeof(user_check_list[0]); i++)
         {
-            if (is_equal(user_check_list[i] , username_choice) == 1)
+            if (is_equal2(user_check_list[i] , username_choice) == 1)
             {
                 printf("USERNAME ALREADY EXISTS. PLEASE CHOOSE ANOTHER ONE\n");
                 printf("--------------------------------\n");
+                flag = 1;
+                break;
             }
             else
             {
-                quit_check = 1;
-                break;
+                continue;
             }
         }
+        if (flag == 0)
+        {
+            //writing to file
+            FILE *file = fopen("patient_data.txt" , "a+");
+            if (file == NULL){printf("ERROR. FILE NOT OPENED");}
+            else
+            {
+                file_write(file , username_choice , password_choice);
+                fclose(file);
+            }
+
+            printf("%s" , divider2);
+
+            printf("SIGNED UP SUCCESSFULLY!\n");
+            quit_check = 1;
+            break;
+        }
+        else
+        {
+            continue;
+        }
     }
-
-    //writing to file
-    FILE *file = fopen("patient_data.txt" , "a+");
-    if (file == NULL){printf("ERROR. FILE NOT OPENED");}
-    else
-    {
-        file_write(file , username_choice , password_choice);
-        fclose(file);
-    }
-
-    printf("%s" , divider2);
-
-    printf("SIGNED UP SUCCESSFULLY!\n");
-
 }
