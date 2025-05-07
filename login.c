@@ -74,6 +74,15 @@ void patient_login()
     char username_input[50];
     char password_input[50];
 
+    //reading from file and creating arrays
+    FILE *file = fopen("patient_data.txt" , "r");
+    if (file == NULL) {printf("ERROR, FILE DOES NOT EXIST");}
+    else
+    {
+        file_read_patient(file);
+        fclose(file);
+    }
+
     //user input
     printf("USERNAME: ");
     scanf("%s" , username_input);
