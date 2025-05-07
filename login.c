@@ -52,22 +52,25 @@ void file_read_doctor(FILE *fptr)
     char entry[100];
     char userid[100];
     char password[100];
-    int j = 0;
+    int j = 1;
     while (fgets(entry , sizeof(entry) , fptr) != NULL)
     {
-        char *check_c = entry;
-        for (int i = 0; i < sizeof(entry); i++ , check_c++)
-        {
-            if (*check_c == ',')
-            {
-                *check_c = '\0';
-                strcpy(userid , entry);
-                strcpy(users_id_list[j] , userid);
-                strcpy(password , check_c + 1);
-                strcpy(passwords_list[j] , password);
-                break;
-            }
-        }
+        char *comma = strchr(entry , ',');
+        char *newline = strchr(entry , '\n');
+
+        // Get the index of the comma
+        int index = comma - entry;
+        int index2 = newline - comma;
+
+        // Copy part before comma
+        strncpy(userid, entry, index);
+        userid[index] = '\0';  // Null-terminate the string
+
+        // Copy part after comma
+        strncpy(password, comma+1, index2);
+        password[index2-1] = '\0';  // Null-terminate the string
+        strcpy(users_id_list[j] , userid);
+        strcpy(passwords_list[j] , password);
         j++;
     }
 }
@@ -140,9 +143,18 @@ void doctor_login()
     scanf("%s" , password_input);
     printf("%s" , divider1);
 
+    //reading from file and creating arrays
+    FILE *file = fopen("doctor_data.txt" , "r");
+    if (file == NULL) {printf("ERROR, FILE DOES NOT EXIST");}
+    else
+    {
+        file_read_doctor(file);
+        fclose(file);
+    }
+
     //checking validity
     int flag = 0;
-    for (int i = 0; i < sizeof(users_id_list)/sizeof(char); i++)
+    for (int i = 0; i < sizeof(users_id_list)/sizeof(users_id_list[0][0]); i++)
     {
         if (is_equal(users_id_list[i] , user_id) == 1)
         {

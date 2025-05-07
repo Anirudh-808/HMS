@@ -29,7 +29,7 @@ int id_gen()
     return id;
 }
 
-void file_write_patient(FILE *fptr , char *u , char *pass)
+void file_write(FILE *fptr , char *u , char *pass)
 {
     char entry[100];
     strcpy(entry ,u);
@@ -55,6 +55,20 @@ void doctor_signup()
     printf("PASSWORD: ");
     scanf("%s" , password_choice);
 
+    //writing to file
+    FILE *file = fopen("doctor_data.txt" , "a+");
+    if (file == NULL){printf("ERROR. FILE NOT OPENED");}
+    else
+    {
+        //coverting the id to string using snprintf()
+        char doctor_id_str[10];
+        snprintf(doctor_id_str , sizeof(doctor_id_str) , "%d" , doctor_id);
+
+        file_write(file , doctor_id_str , password_choice);
+        fclose(file);
+        
+    }
+
     printf("SIGNED UP SUCCESSFULLY!\n");
 }
 
@@ -77,7 +91,7 @@ void patient_signup()
     if (file == NULL){printf("ERROR. FILE NOT OPENED");}
     else
     {
-        file_write_patient(file , username_choice , password_choice);
+        file_write(file , username_choice , password_choice);
         fclose(file);
     }
 
