@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 
-char divider1[] = "########################################\n";
+char divider1[] = "====================================\n";
 char users_list[][100] = {"ADMIN"};
 char users_id_list[][100] = {"000"};
 char passwords_list[][100] = {"admin123"};
@@ -39,8 +39,8 @@ void file_read_patient(FILE *fptr)
         username[index] = '\0';  // Null-terminate the string
 
         // Copy part after comma
-        strncpy(password, comma + 1 , index2);
-        password[index2] = '\0';  // Null-terminate the string
+        strncpy(password, comma+1, index2);
+        password[index2-1] = '\0';  // Null-terminate the string
         strcpy(users_list[j] , username);
         strcpy(passwords_list[j] , password);
         j++;

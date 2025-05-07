@@ -3,7 +3,7 @@
 #include <time.h>
 #include <string.h>
 
-char divider2[] = "----------------------------------------\n";
+char divider2[] = "====================================\n";
 char username_choice[50];
 char password_choice[50];
 int doctor_id;
