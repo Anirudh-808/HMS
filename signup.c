@@ -74,17 +74,67 @@ void doctor_signup()
 
 void patient_signup()
 {
+    char user_check_list[][100] = {"ADMIN"};
     printf("%s" , divider2);
     printf("HOSPITAL MANAGEMEMNT SYSTEM\n");
-    printf("%s" , divider2);
 
     printf("WELCOME TO THE SIGNUP PAGE!\n");
-    printf("PLEASE ENTER YOUR USERNAME AND PASSWORD OF CHOICE\n");
+    /*printf("PLEASE ENTER YOUR USERNAME AND PASSWORD OF CHOICE\n");
     printf("%s" , divider2);
     printf("USERNAME: ");
     scanf("%s" , username_choice);
     printf("PASSWORD: ");
-    scanf("%s" , password_choice);
+    scanf("%s" , password_choice);*/
+
+    //checking for duplicates in file
+    FILE *file1 = fopen("patient_data.txt" , "r");
+    if (file1 == NULL) {printf("ERROR. FILE DOES NOT EXIST");}
+    else
+    {
+        char entry[100];
+        char username[100];
+        int j = 1;
+        while (fgets(entry , sizeof(entry) , file1) != NULL)
+        {
+            char *comma = strchr(entry , ',');
+
+            // Get the index of the comma
+            int index = comma - entry;
+
+            // Copy part before comma
+            strncpy(username, entry, index);
+            username[index] = '\0';  // Null-terminate the string
+
+            strcpy(user_check_list[j] , username);
+            j++;
+        }
+    }
+    fclose(file1);
+
+    //cross verifying input for duplicates
+    int quit_check = 0;
+    while (quit_check == 0)
+    {
+        printf("PLEASE ENTER YOUR USERNAME AND PASSWORD OF CHOICE\n");
+        printf("%s" , divider2);
+        printf("USERNAME: ");
+        scanf("%s" , username_choice);
+        printf("PASSWORD: ");
+        scanf("%s" , password_choice);
+        for (int i = 0; i < sizeof(user_check_list)/sizeof(user_check_list[0][0]); i++)
+        {
+            if (is_equal(user_check_list[i] , username_choice) == 1)
+            {
+                printf("USERNAME ALREADY EXISTS. PLEASE CHOOSE ANOTHER ONE\n");
+                printf("--------------------------------\n");
+            }
+            else
+            {
+                quit_check = 1;
+                break;
+            }
+        }
+    }
 
     //writing to file
     FILE *file = fopen("patient_data.txt" , "a+");
