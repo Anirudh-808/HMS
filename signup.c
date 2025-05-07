@@ -35,6 +35,7 @@ void file_write_patient(FILE *fptr , char *u , char *pass)
     strcpy(entry ,u);
     strcat(entry , ",");
     strcat(entry , pass);
+    strcat(entry , "\n");
 
     fputs(entry , fptr);
 }
