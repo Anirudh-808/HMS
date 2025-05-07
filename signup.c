@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
 
 char divider2[] = "----------------------------------------\n";
 char username_choice[50];
@@ -26,6 +27,16 @@ int id_gen()
     }
 
     return id;
+}
+
+void file_write_patient(FILE *fptr , char *u , char *pass)
+{
+    char entry[100];
+    strcpy(entry ,u);
+    strcat(entry , ",");
+    strcat(entry , pass);
+
+    fputs(entry , fptr);
 }
 
 void doctor_signup()
@@ -59,6 +70,16 @@ void patient_signup()
     scanf("%s" , username_choice);
     printf("PASSWORD: ");
     scanf("%s" , password_choice);
+
+    //writing to file
+    FILE *file = fopen("patient_data.txt" , "a+");
+    if (file == NULL){printf("ERROR. FILE NOT OPENED");}
+    else
+    {
+        file_write_patient(file , username_choice , password_choice);
+        fclose(file);
+    }
+
     printf("%s" , divider2);
 
     printf("SIGNED UP SUCCESSFULLY!\n");
