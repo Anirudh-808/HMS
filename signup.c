@@ -74,7 +74,7 @@ char * check_id(char *id_str , char check_list[MAX_USERS][100] , int l)
     }
 }
 
-void doctor_signup()
+int doctor_signup()
 {
     char userid_check_list[MAX_USERS][100];
     printf("%s" , divider2);
@@ -117,7 +117,7 @@ void doctor_signup()
     int length = sizeof(userid_check_list)/sizeof(userid_check_list[0]);
     strcpy(doctor_id_str , check_id(doctor_id_str , userid_check_list , length));
 
-    printf("YOUR ID IS: %d\n" , doctor_id);
+    printf("YOUR ID IS: %s\n" , doctor_id_str);
     printf("ENTER YOUR PASSWORD OF CHOICE\n");
     printf("PASSWORD: ");
     scanf("%s" , password_choice);
@@ -134,6 +134,7 @@ void doctor_signup()
 
     printf("SIGNED UP SUCCESSFULLY!\n");
     printf("%s" , divider2);
+    return atoi(doctor_id_str);
 }
 
 void patient_signup()

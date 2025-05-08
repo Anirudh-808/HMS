@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "login.c"
 #include "signup.c"
+#include "doctor_management.c"
 
 char divider[] = "====================================\n";
 
@@ -63,7 +64,8 @@ int main()
             }
             else if (option == 2)
             {
-                doctor_signup();
+                int id = doctor_signup();
+                add_doctor(id);
             }
             else
             {
@@ -85,6 +87,25 @@ int main()
     else if (token == 2)
     {
         //for doctor features
+        int option = menu();
+        switch (option)
+        {
+            case 1:
+            {
+                update();
+                break;
+            }
+            case 2:
+            {
+                appointment_status();
+                break;
+            }
+            case 3:
+            {
+                access_records();
+                break;
+            }
+        }
     }
 
     return 0;
