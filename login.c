@@ -78,7 +78,7 @@ void file_read_doctor(FILE *fptr)
     }
 }
 
-void patient_login()
+int patient_login()
 {
     char username_input[50];
     char password_input[50];
@@ -109,6 +109,7 @@ void patient_login()
             {   
                 flag = 1;
                 printf("LOGIN SUCCESSFUL!\n");
+                return 1;
                 break;
             }
             else
@@ -126,14 +127,16 @@ void patient_login()
     if (flag == 0)
     {
         printf("INVALID USERNAME\n");
+        return 0;
     }
     else if (flag == 2)
     {
         printf("INVALID PASSWORD\n");
+        return 0;
     }
 }
 
-void doctor_login()
+int doctor_login()
 {
     //user data
     char user_id[10];
@@ -165,6 +168,7 @@ void doctor_login()
             {   
                 flag = 1;
                 printf("LOGIN SUCCESSFUL!\n");
+                return 1;
             }
             else
             {   
@@ -181,9 +185,11 @@ void doctor_login()
     if (flag == 0)
     {
         printf("INVALID USERID\n");
+        return 0;
     }
     else if (flag == 2)
     {
         printf("INVLAID PASSWORD\n");
+        return 0;
     }
 }

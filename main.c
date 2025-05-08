@@ -4,6 +4,8 @@
 
 char divider[] = "====================================\n";
 
+int token = 0;
+
 int main() 
 {
     /*using the srand() function to generate a random number
@@ -37,11 +39,11 @@ int main()
 
             if (option == 1)
             {
-                patient_login();
+                token = patient_login();
             }
             else if (option == 2)
             {
-                doctor_login();
+                token = doctor_login();
             }
             else
             {
@@ -73,6 +75,14 @@ int main()
         {
             printf("INVALID CHOICE\n");
         }
+    }
+
+    if (token == 0) {}
+    else if (token == 1)
+    {
+        //open a menu of available options
+        //one for doctor
+        //one for patient
     }
 
     return 0;
