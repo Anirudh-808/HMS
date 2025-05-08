@@ -1,0 +1,22 @@
+Appointment Number,Start Time,Doctor ID,Patient Name,Status,Case Notes
+1,8.00,647,John Doe,closed,very very sick
+2,8.15,706,Alice Smith,open,
+3,8.30,444,Bob Johnson,open,
+4,8.45,193,Mary Adams,open,
+5,9.00,991,Ravi Kumar,open,
+6,9.15,715,Lina Carter,open,
+7,9.30,81,Tom Wilson,open,
+8,9.45,21,Ella Brown,open,
+9,10.00,842,Steve Rogers,open,
+10,10.15,561,Jessica Lee,open,
+11,10.30,744,Peter Parker,open,
+12,10.45,191,Samantha Turner,open,
+13,11.00,824,Michael Harris,open,
+14,11.15,415,Emma Davis,open,
+15,11.30,956,David Miller,open,
+16,11.45,372,Olivia Scott,open,
+17,12.00,310,James White,open,
+18,12.15,444,Sophia Clark,open,
+19,12.45,647,Daniel Hall,open,
+20,13.00,634,Alice Smith,closed,common cold
+0,0.00,0,,,

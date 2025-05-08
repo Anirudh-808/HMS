@@ -2,6 +2,10 @@
 #include "login.c"
 #include "signup.c"
 #include "doctor_management.c"
+#include "patient_management.c"
+#include "appointments.c"
+#include <stdlib.h>
+#include <time.h>
 
 char divider[] = "====================================\n";
 
@@ -83,6 +87,22 @@ int main()
     else if (token == 1)
     {
         //open a menu of available options for patients
+        int choice = 0;
+        printf("MENU\n");
+        printf("1. Book an appointment\n");
+        printf("2. Patient info\n");
+        printf("ENTER PREFFERED CHOICE: ");
+        scanf("%d" , &choice);
+        if (choice == 1)
+        {
+            //ananya r
+            appointments();
+        }
+        else if (choice == 2)
+        {
+            //archita
+            patient_management();
+        }
     }
     else if (token == 2)
     {
