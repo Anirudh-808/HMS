@@ -168,7 +168,7 @@ int doctor_login()
             {   
                 flag = 1;
                 printf("LOGIN SUCCESSFUL!\n");
-                return 1;
+                return 2;
             }
             else
             {   

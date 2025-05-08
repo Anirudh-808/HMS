@@ -80,9 +80,11 @@ int main()
     if (token == 0) {}
     else if (token == 1)
     {
-        //open a menu of available options
-        //one for doctor
-        //one for patient
+        //open a menu of available options for patients
+    }
+    else if (token == 2)
+    {
+        //for doctor features
     }
 
     return 0;
