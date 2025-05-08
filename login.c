@@ -101,7 +101,7 @@ void patient_login()
 
     //checking validity
     int flag = 0;
-    for (int i = 0; i < sizeof(users_list)/sizeof(users_list[0][0]); i++)
+    for (int i = 0; i < sizeof(users_list)/sizeof(users_list[0]); i++)
     {
         if (is_equal(users_list[i] , username_input) == 1)
         {
@@ -157,7 +157,7 @@ void doctor_login()
 
     //checking validity
     int flag = 0;
-    for (int i = 0; i < sizeof(users_id_list)/sizeof(users_id_list[0][0]); i++)
+    for (int i = 0; i < sizeof(users_id_list)/sizeof(users_id_list[0]); i++)
     {
         if (is_equal(users_id_list[i] , user_id) == 1)
         {
