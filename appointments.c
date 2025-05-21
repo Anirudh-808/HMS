@@ -2,21 +2,20 @@
 #include <string.h>
 #include<stdlib.h>
 
-
 int appointments() 
 {
     FILE *file;
-    char line[512], *token;
+    char line[500], *token;
     char specializations[50][100];
     int spec_count = 0;
     int choice;
     int dchoice;
 
-    file = fopen("doctor_management.csv", "r");
+    file = fopen("doctors.csv", "r");
     if (file == NULL) 
     {
         printf("ERROR WHILE OPENING FILE.\n");
-        return 1;
+        return 0;
     }
 
     fgets(line, sizeof(line), file);
@@ -25,6 +24,7 @@ int appointments()
     {
         token = strtok(line, ","); 
         token = strtok(NULL, ","); 
+        token = strtok(NULL, ",");
 
         if (token != NULL) 
         {
@@ -40,14 +40,14 @@ int appointments()
                 }
             }
 
-            if (!duplicate && spec_count < 50) 
+            if (duplicate == 0 && spec_count < 50) 
             {
                 strcpy(specializations[spec_count], token);
                 spec_count++;
             }
         }
     }
-    fclose(file);
+    //fclose(file);
 
     printf("AVAILABLE SPECIALIZATIONS:\n");
     for (int i = 0; i < spec_count; i++) 
@@ -61,14 +61,17 @@ int appointments()
     if (choice < 1 || choice > spec_count) 
     {
         printf("INVALID.\n");
-        return 1;
+        return 0;
     }
 
-    file = fopen("doctor_management.csv", "r");
-    if (file == NULL) {
+    fseek(file, 0, SEEK_SET);
+/*
+    file = fopen("doctors.csv", "r");
+    if (file == NULL) 
+    {
         printf("ERROR WHILE OPENING FILE.\n");
-        return 1;
-    }
+        return 0;
+    }*/
 
     fgets(line, sizeof(line), file); 
 
@@ -80,6 +83,7 @@ int appointments()
         int experience;
 
         token = strtok(line, ",");
+        token = strtok(NULL, ",");
         strcpy(name, token);
 
         token = strtok(NULL, ",");
@@ -95,29 +99,32 @@ int appointments()
         }
     }
 
-    fclose(file);
+    //fclose(file);
 
     printf("\nENTER CHOICE OF DOCTOR: ");
     scanf("%d", &dchoice);
-
-    file = fopen("doctor_management.csv", "r");
-    if (file == NULL) {
+/*
+    file = fopen("doctors.csv", "r");
+    if (file == NULL) 
+    {
         printf("ERROR IN OPENING FILE.\n");
-        return 1;
-    }
+        return 0;
+    }*/
+
+    fseek(file, 0, SEEK_SET);
 
     fgets(line, sizeof(line), file); 
 
+    char name[100], spec[100];
+    int experience;
+    int age;
+    int fees;
     dcount=0;
+
     while (fgets(line, sizeof(line), file)) 
     {
-        char name[100], spec[100];
-        int experience;
-        int age;
-        int fees;
-
-
         token = strtok(line, ",");
+        token = strtok(NULL, ",");
         strcpy(name, token);
 
         token = strtok(NULL, ",");
@@ -132,15 +139,16 @@ int appointments()
         token = strtok(NULL, ",");
         fees = atoi(token);
 
-
         if (strcmp(spec, specializations[choice - 1]) == 0) 
         {
             dcount++;
             if(dcount == dchoice)
-                printf("%s \nTOTAL FEES - %d\n", name,fees);            
+            {
+                printf("%s \nTOTAL FEES - %d\n", name,fees); 
+                break; 
+            }          
         }
     }
-
     fclose(file);
     return 0;
 }

@@ -9,18 +9,30 @@ typedef struct Doctor {
   int consultation_fee;
   char specialization[100];
   char name[100];
-  int phone_no;
+  char phone_no[15];
 } Doctor;
 
 typedef struct Appointment {
   int app_no;
   int d_id;
+  int consultation_fee;
+  int experience;
   float start_time;
-  char patient[100];
+  char doctor_name[100];
+  char specialization[100];
+  char patient_name[100];
   char status[100];
-  char notes[500];
+  char notes[100];
 } Appointment;
 
+typedef struct Patient {
+  int age;
+  char name[100];
+  char address[100];
+  char gender[15];
+  char prev_illness[100];
+  char phone_no[15];
+} Patient;
 
 int menu()
 {
@@ -40,35 +52,6 @@ int menu()
 Doctor doctors[500];
 int count=0;
 
-/*int generate_id()
-{
-  FILE *fp=fopen("doctors.csv","r");
-  if (fp == NULL)
-  {
-    return 1;
-  }
-  char line[1024];
-  int max_id=0;
-  if (fgets(line,sizeof(line),fp)==NULL)
-  {
-    fclose(fp);
-    return 1;
-  }
-  while(fgets(line,sizeof(line),fp));
-  {
-    int id=0;
-    if(sscanf(line,"%d,",&id)==1)
-    {
-      if (id>max_id)
-      {
-        max_id=id;
-      }
-    }
-  }
-  fclose(fp);
-  return max_id+1;
-}*/
-
 void add_doctor(int id)
 {
   Doctor d;
@@ -82,7 +65,7 @@ void add_doctor(int id)
   scanf("%d",&d.age);
 
   printf("Enter phone number:");
-  scanf("%d",&d.phone_no);
+  scanf("\n%[^\n]s",d.phone_no);
 
   printf("Enter specialization:");
   scanf("\n%[^\n]s",d.specialization);
@@ -90,7 +73,7 @@ void add_doctor(int id)
   printf("Enter years of experience:");
   scanf("%d",&d.experience);
 
-  printf("Enter consultation_fee:");
+  printf("Enter consultation fee:");
   scanf("%d",&d.consultation_fee);
 
   //Appending to file
@@ -104,10 +87,10 @@ void add_doctor(int id)
   fseek(file_pointer,0, SEEK_END);
   if (ftell(file_pointer)==0)
   {
-    fprintf(file_pointer, "ID,Name,Specialization,Experience,Age,Phone Number,Consultation fee\n");
+    fprintf(file_pointer, "ID,Name,Specialization,Experience,Age,Consultation fee,Phone Number\n");
   }
 
-  fprintf(file_pointer,"%d,%s,%s,%d,%d,%d,%d\n", d.id,d.name,d.specialization,d.experience,d.age,d.consultation_fee,d.phone_no);
+  fprintf(file_pointer,"%d,%s,%s,%d,%d,%d,%s\n", d.id,d.name,d.specialization,d.experience,d.age,d.consultation_fee,d.phone_no);
   fclose(file_pointer);
   printf("Doctor has been added.\n");
 }
@@ -149,7 +132,7 @@ void update()
   
  while (fgets(line,sizeof(line),fp) && doctor_count< 500)
   {
-    sscanf(line,"%d,%50[^,],%50[^,],%d,%d,%d,%d",&doctors[doctor_count].id,doctors[doctor_count].name,doctors[doctor_count].specialization,&doctors[doctor_count].experience,&doctors[doctor_count].age,&doctors[doctor_count].consultation_fee,&doctors[doctor_count].phone_no);
+    sscanf(line,"%d,%[^,],%[^,],%d,%d,%d,%[^,]",&doctors[doctor_count].id,doctors[doctor_count].name,doctors[doctor_count].specialization,&doctors[doctor_count].experience,&doctors[doctor_count].age,&doctors[doctor_count].consultation_fee,doctors[doctor_count].phone_no);
     doctor_count++;
   }
   fclose(fp);
@@ -160,7 +143,7 @@ void update()
     {
       switch (field)
       {
-       case 1:
+        case 1:
           {
             printf("Enter new name:");
             scanf("\n%[^\n]s",doctors[i].name);
@@ -193,7 +176,7 @@ void update()
         case 6:
           {
             printf("Enter new phone number:");
-            scanf("%d",&doctors[i].phone_no);
+            scanf("\n%[^\n]s",doctors[i].phone_no);
             break;
           }
 
@@ -213,7 +196,7 @@ void update()
       fprintf(fp,"ID,Name,Specialization,Experience,Age,Consultation fee,Phone Number\n");
       for (int j=0;j<doctor_count;j++)
       {
-        fprintf(fp,"%d,%s,%s,%d,%d,%d,%d\n", doctors[j].id,doctors[j].name,doctors[j].specialization,doctors[j].experience,doctors[j].age,doctors[j].consultation_fee,doctors[j].phone_no);
+        fprintf(fp,"%d,%s,%s,%d,%d,%d,%s\n", doctors[j].id,doctors[j].name,doctors[j].specialization,doctors[j].experience,doctors[j].age,doctors[j].consultation_fee,doctors[j].phone_no);
       }
       fclose(fp);
       printf("Update successful.\n");
@@ -231,6 +214,7 @@ void appointment_status()
   printf("\nEnter doctor's ID:");
   scanf("%d",&input_id);
 
+
   FILE *fp=fopen("appointments.csv","r");
   if(fp==NULL)
   {
@@ -245,7 +229,7 @@ void appointment_status()
 
   while(fgets(line,sizeof(line),fp) && app_no<1000)
   {
-    sscanf(line,"%d,%f,%d,%100[^,],%100[^,],%500[^\n]",&appointments[app_no].app_no,&appointments[app_no].start_time,&appointments[app_no].d_id,appointments[app_no].patient,appointments[app_no].status,appointments[app_no].notes);
+    sscanf(line,"%d,%f,%d,%[^,],%[^,],%d,%d,%[^,],%[^,],%[^\n]",&appointments[app_no].app_no,&appointments[app_no].start_time,&appointments[app_no].d_id,appointments[app_no].doctor_name,appointments[app_no].specialization,&appointments[app_no].experience,&appointments[app_no].consultation_fee,appointments[app_no].patient_name,appointments[app_no].status,appointments[app_no].notes);
     app_no++;
   }
   fclose(fp);
@@ -256,7 +240,7 @@ void appointment_status()
   {
     if (input_id==appointments[i].d_id && strcasecmp(appointments[i].status,"open")==0)
     {
-      printf("\nAppointment Number:%d, Start time:%.2f, Patient Name:%s, Appointment Status:%s\n\n",appointments[i].app_no,appointments[i].start_time,appointments[i].patient,appointments[i].status);
+      printf("\nAppointment Number:%d, Start time:%.2f, Patient Name:%s, Appointment Status:%s\n\n",appointments[i].app_no,appointments[i].start_time,appointments[i].patient_name,appointments[i].status);
       result=1;
     }
   }
@@ -292,10 +276,10 @@ void appointment_status()
     printf("Unable to open the file.");
     return;
   }
-  fprintf(file,"Appointment Number,Start Time,Doctor ID,Patient Name,Status,Case Notes\n");
+  fprintf(file,"Appointment Number,Start Time,Doctor ID,Doctor Name,Specialization,Years of Experience,Consultation Fee,Patient Name,Status,Case Notes\n");
   for (int j=0;j<app_no;j++)
   {
-    fprintf(file,"%d,%.2f,%d,%s,%s,%s\n",appointments[j].app_no,appointments[j].start_time,appointments[j].d_id,appointments[j].patient,appointments[j].status,appointments[j].notes);
+    fprintf(file,"%d,%.2f,%d,%s,%s,%d,%d,%s,%s,%s\n",appointments[j].app_no,appointments[j].start_time,appointments[j].d_id,appointments[j].doctor_name,appointments[j].specialization,appointments[j].experience,appointments[j].consultation_fee,appointments[j].patient_name,appointments[j].status,appointments[j].notes);
   }
   fclose(file);
   printf("Successfully updated.\n");
@@ -306,9 +290,12 @@ void appointment_status()
 void access_records()
 {
   Appointment appointments[1000];
+  Patient patient[500];
   char line[1024];
   int app_no=0;
   char input_patient[100];
+  int patient_no=0;
+
 
   printf("Enter the patient's name:");
   scanf("\n%[^\n]s",input_patient);
@@ -328,7 +315,7 @@ void access_records()
 
   while (fgets(line,sizeof(line),fp) && app_no<1000)
   {
-    sscanf(line, "%d,%f,%d,%100[^,],%100[^,],%50[^\n]",&appointments[app_no].app_no,&appointments[app_no].start_time,&appointments[app_no].d_id,appointments[app_no].patient,appointments[app_no].status,appointments[app_no].notes);
+    sscanf(line, "%d,%f,%d,%[^,],%[^,],%d,%d,%[^,],%[^,],%[^\n]",&appointments[app_no].app_no,&appointments[app_no].start_time,&appointments[app_no].d_id,appointments[app_no].doctor_name,appointments[app_no].specialization,&appointments[app_no].experience,&appointments[app_no].consultation_fee,appointments[app_no].patient_name,appointments[app_no].status,appointments[app_no].notes);
     app_no++;
   }
   fclose(fp);
@@ -336,7 +323,7 @@ void access_records()
   int found=0;
   for (int i=0;i<app_no;i++)
   {
-    if (strcmp(appointments[i].patient,input_patient)==0)
+    if (strcmp(appointments[i].patient_name,input_patient)==0)
     {
       printf("\nAppointment Number: %d\nCase Notes: %s\n",appointments[i].app_no,appointments[i].notes);
       found=1;
@@ -346,4 +333,34 @@ void access_records()
   {
     printf("No case notes found for this patient.\n");
   }
+
+
+  FILE *filep=fopen("patients.csv","r");
+  if (filep == NULL)
+  {
+    printf("File not found.");
+    return;
+  }
+
+  if (fgets(line,sizeof(line),filep)==NULL)
+  {
+    fclose(filep);
+    return;
+  }
+  
+  while (fgets(line,sizeof(line),filep) && patient_no<500)
+  {
+    sscanf(line, "%99[^,],%d,%99[^,],%99[^,],%99[^,],%14[^\n]",patient[patient_no].name,&patient[patient_no].age,patient[patient_no].address,patient[patient_no].gender,patient[patient_no].prev_illness,patient[patient_no].phone_no);
+    patient_no++;
+  }
+  fclose(filep);
+
+  for (int i=0;i<patient_no;i++)
+  {
+    if (strcmp(patient[i].name,input_patient)==0)
+    {
+      printf("\nPrevious Illnesses: %s\n",patient[i].prev_illness);
+    }
+  }
+
 }
